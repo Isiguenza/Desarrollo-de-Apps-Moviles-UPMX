@@ -1,0 +1,33 @@
+# Carpeta personal del profesor
+myv/
+
+# Xcode
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+
+# Swift Package Manager
+.build/
+Package.resolved
+
+# CocoaPods
+Pods/
+
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+
+# Archives y zips
+*.zip
+*.ipa
+
+# IDEs
+.idea/
+*.swp
+*~
