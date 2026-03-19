@@ -1,14 +1,14 @@
 //
-//  PokeAPIApp.swift
-//  PokeAPI
+//  pokeapiApp.swift
+//  pokeapi
 //
-//  Created by Iñaki Sigüenza on 10/03/26.
+//  Created by Iñaki Sigüenza on 04/03/26.
 //
 
 import SwiftUI
 
 @main
-struct PokeAPIApp: App {
+struct pokeapiApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

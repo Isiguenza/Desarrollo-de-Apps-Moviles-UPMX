@@ -1,25 +1,31 @@
 //
 //  PokemonViewModel.swift
-//  PokeAPI
+//  pokeapi
 //
-//  Created by Iñaki Sigüenza on 10/03/26.
+//  Created by Iñaki Sigüenza on 04/03/26.
 //
 
 import Foundation
 import Combine
 
+
+@MainActor
 class PokemonViewModel: ObservableObject{
     
     @Published var pokemons: [Pokemon] = []
     
+    @Published var selectedPokemon: PokemonDetail?
+    
     func fetchPokemons() async {
         
-        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon?limit=20") else {return}
+        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon?limit=90") else {return}
         
         do {
             
+            //URLSession descarga los datos de internet
             let (data, _) = try await URLSession.shared.data(from: url)
             
+            //Convertimos el JSON en nuestro modelo de Swift
             let decoded = try JSONDecoder().decode(PokemonResponse.self, from: data)
             
             DispatchQueue.main.async {
@@ -27,26 +33,23 @@ class PokemonViewModel: ObservableObject{
             }
             
         } catch {
-            print("error al jalar a los bichitos")
+            print("Error al jalar pokemons")
         }
+        
         
     }
     
     func imageURL(for pokemon: Pokemon) -> URL? {
-          
-          let urlString = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(pokemon.id).png"
-          
-          return URL(string: urlString)
-      }
-    
-    
-    @Published var selectedPokemon: PokemonDetail?
-
-    func fetchPokemonDetail(id: Int) async {
         
-        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(id)") else {
-            return
-        }
+        let urlString = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(pokemon.id).png"
+        
+        return URL(string: urlString)
+        
+    }
+    
+    func fetchPokemonDetail(id: Int) async{
+        
+        guard let url = URL(string: "https://pokeapi.co/api/v2/pokemon/\(id)") else {return}
         
         do {
             
@@ -54,13 +57,15 @@ class PokemonViewModel: ObservableObject{
             
             let decoded = try JSONDecoder().decode(PokemonDetail.self, from: data)
             
-            DispatchQueue.main.async {
-                self.selectedPokemon = decoded
-            }
+           
+            self.selectedPokemon = decoded
+          
+            
             
         } catch {
             print(error)
         }
+        
     }
     
 }

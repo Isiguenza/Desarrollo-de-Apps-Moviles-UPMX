@@ -1,8 +1,8 @@
 //
 //  PokemonDetail.swift
-//  PokeAPI
+//  pokeapi
 //
-//  Created by Iñaki Sigüenza on 11/03/26.
+//  Created by Iñaki Sigüenza on 04/03/26.
 //
 
 import SwiftUI
@@ -12,14 +12,13 @@ struct PokemonDetailView: View {
     let pokemon: Pokemon
     
     @ObservedObject var viewModel: PokemonViewModel
+    
     var body: some View {
-        
-        ZStack(alignment: .top) {
-            
-            // MARK: Top Gradient
+        ZStack(alignment: .topTrailing){
             
             LinearGradient(
-                colors: [
+                
+                colors:[
                     gradientColor(),
                     .white
                 ],
@@ -29,11 +28,9 @@ struct PokemonDetailView: View {
             .frame(height: 300)
             .ignoresSafeArea()
             
-            VStack(spacing: 20) {
+            VStack(spacing: 20){
                 
-                // MARK: Pokemon image
-                
-                AsyncImage(url: viewModel.imageURL(for: pokemon)) { image in
+                AsyncImage(url: viewModel.imageURL(for: pokemon)){ image in
                     
                     image
                         .resizable()
@@ -42,10 +39,8 @@ struct PokemonDetailView: View {
                 } placeholder: {
                     ProgressView()
                 }
-                .frame(width: 180)
+                .frame(width: 250)
                 .padding(.top, 40)
-                
-                // MARK: Name
                 
                 Text(pokemon.name.capitalized)
                     .font(.largeTitle)
@@ -53,75 +48,68 @@ struct PokemonDetailView: View {
                 
                 if let detail = viewModel.selectedPokemon {
                     
-                    // MARK: Types
-                    
-                    HStack {
-                        ForEach(detail.types, id: \.type.name) { entry in
+                    HStack{
+                        ForEach(detail.types, id: \.type.name){ entry in
                             
                             Text(entry.type.name.capitalized)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
-                                .background(
-                                    gradientColor().opacity(0.2)
-                                )
-                                .cornerRadius(12)
+                            
                         }
                     }
                     
-                    // MARK: Stats Card
                     
-                    VStack(spacing: 12) {
-                        
+                    
+                    
+                    
+                    VStack{
                         statRow(title: "Height", value: "\(detail.height)")
-                        
                         statRow(title: "Weight", value: "\(detail.weight)")
-                        
                     }
                     .padding()
-                    .background(.white)
+                    .background(Color(.systemGray6))
                     .cornerRadius(16)
-                    .shadow(radius: 8)
                     .padding(.horizontal)
+                    
                 }
                 
+              
+                
                 Spacer()
+                
             }
+            
         }
+        .navigationTitle("Detalle \(pokemon.name)")
+        .navigationBarTitleDisplayMode(.inline)
         .task {
             await viewModel.fetchPokemonDetail(id: pokemon.id)
         }
-        .navigationBarTitleDisplayMode(.inline)
     }
     
     
-    // MARK: Stat Row
-    
     func statRow(title: String, value: String) -> some View {
-        
-        HStack {
+        HStack{
             Text(title)
-                .foregroundColor(.secondary)
+                .foregroundStyle(.secondary)
             
             Spacer()
             
             Text(value)
-                .fontWeight(.bold)
+                .bold()
         }
     }
     
     
-    // MARK: Color based on type
-    
     func gradientColor() -> Color {
         
-        guard let type = viewModel.selectedPokemon?.types.first?.type.name else {
-            return .gray
-        }
+        guard let type = viewModel.selectedPokemon?.types.first?.type.name else {return .gray}
+        
         
         switch type {
             
         case "fire":
-            return .red
+            return .orange
             
         case "water":
             return .blue
@@ -129,7 +117,7 @@ struct PokemonDetailView: View {
         case "grass":
             return .green
             
-        case "electric":
+        case"electric":
             return .yellow
             
         case "psychic":
@@ -143,6 +131,16 @@ struct PokemonDetailView: View {
             
         default:
             return .gray
+            
+            
         }
+        
     }
+    
+    
+}
+
+
+#Preview {
+    ContentView()
 }
