@@ -9,44 +9,21 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @StateObject var viewModel = PokemonViewModel()
+    @StateObject var authViewModel = AuthViewModel()
     
     var body: some View {
-        NavigationStack{
-            List(viewModel.pokemons){ pokemon in
-                
-                NavigationLink{
-                    PokemonDetailView(pokemon: pokemon, viewModel: viewModel)
-                } label: {
-                    HStack{
-                        AsyncImage(url: viewModel.imageURL(for: pokemon)){ image in
-                            
-                            image
-                                .resizable()
-                                .scaledToFit()
-                            
-                            
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .frame(width: 60, height: 60)
-                        
-                        Text(pokemon.name.capitalized)
-                            .font(.headline)
-                            
-                        
-                    }
-                }
-                .navigationTitle("Pokemon")
-                
-            }
+        
+        
+        if authViewModel.isLoggedIn {
+            PokeView()
+        } else {
+            LoginView(authViewModel: authViewModel)
         }
-        .task {
-            await viewModel.fetchPokemons()
-        }
+        
+        
     }
     
-   
+    
 }
 
 #Preview {
